@@ -1,0 +1,134 @@
+<?xml version="1.0"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+    <xsd:element name="config">
+        <xsd:complexType>
+            <xsd:all>
+                <xsd:element name="listen_port" type="Port" />
+                <xsd:element name="listen_ip" type="IPv4Address" />
+                <xsd:element name="keystore" type="xsd:string" minOccurs="1" />
+                <xsd:element name="lockout" minOccurs="0">
+                    <xsd:complexType>
+                        <xsd:sequence minOccurs="0">
+                            <xsd:element name="attempts" type="xsd:unsignedShort" maxOccurs="1"/>
+                            <xsd:element name="block_duration" type="xsd:unsignedInt" maxOccurs="1"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+                <xsd:element name="keypassword" type="xsd:string" minOccurs="1" />
+                <xsd:element name="codes" type="AccessCodeMap" maxOccurs="1" />
+            </xsd:all>
+        </xsd:complexType>
+    </xsd:element>
+
+
+    <xsd:complexType name="AccessCodeMap">
+        <xsd:sequence>
+            <xsd:element name="code" type="AccessCode" minOccurs="1" maxOccurs="unbounded" />
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="AccessCode">
+        <xsd:all>
+            <xsd:element name="enabled" type="xsd:boolean" />
+            <xsd:element name="owner" type="xsd:string" />
+            <xsd:element name="description" type="xsd:string" minOccurs="0" maxOccurs="1" />
+            <xsd:element name="gpios" type="GPIOList" minOccurs="1" maxOccurs="1" />
+            <xsd:element name="AccessConstraints" type="AccessConstraintsType" minOccurs="0" maxOccurs="1" />
+        </xsd:all>
+
+        <xsd:attribute name="value" type="xsd:string" use="required" />
+    </xsd:complexType>
+
+
+    <xsd:complexType name="AccessConstraintsType">
+        <xsd:all>
+            <xsd:element name="DayOfWeek" type="DayOfWeekConstraints" minOccurs="0" maxOccurs="1">
+                <xsd:unique name="DOWUnique">
+                    <xsd:selector xpath="Day" />
+                    <xsd:field xpath="." />
+                </xsd:unique>
+            </xsd:element>
+            <xsd:element name="TimeOfDay" type="TimeOfDayConstraints" minOccurs="0" maxOccurs="1" />
+            <xsd:element name="DateTime" type="DateTimeConstraints" minOccurs="0" maxOccurs="1" />
+        </xsd:all>
+    </xsd:complexType>
+
+
+    <xsd:complexType name="DayOfWeekConstraints">
+        <xsd:sequence>
+            <xsd:element name="Day" type="DayOfWeekEnum" minOccurs="1" maxOccurs="7" />
+        </xsd:sequence>
+    </xsd:complexType>
+
+
+    <xsd:simpleType name="DayOfWeekEnum">
+        <xsd:restriction base="xsd:normalizedString">
+            <xsd:enumeration value="Sunday" />
+            <xsd:enumeration value="Monday" />
+            <xsd:enumeration value="Tuesday" />
+            <xsd:enumeration value="Wednesday" />
+            <xsd:enumeration value="Thursday" />
+            <xsd:enumeration value="Friday" />
+            <xsd:enumeration value="Saturday" />
+        </xsd:restriction>
+    </xsd:simpleType>
+    
+    <xsd:complexType name="TimeOfDayConstraints">
+        <xsd:sequence>
+            <xsd:element name="TimeRange" maxOccurs="unbounded">
+                <xsd:complexType>
+                    <xsd:attribute name="start" type="xsd:string" use="required" />
+                    <xsd:attribute name="end"   type="xsd:string" use="required" />
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="DateTimeConstraints">
+        <xsd:sequence>
+            <xsd:element name="DateTimeRange" maxOccurs="unbounded">
+                <xsd:complexType>
+                    <xsd:attribute name="start" type="xsd:string" use="required" />
+                    <xsd:attribute name="end"   type="xsd:string" use="required" />
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+
+
+    <xsd:simpleType name="Port">
+        <xsd:annotation>
+            <xsd:documentation>
+                Port number in the range [1, 65535].
+            </xsd:documentation>
+        </xsd:annotation>
+
+        <xsd:restriction base="xsd:unsignedShort">
+            <xsd:minInclusive value="1" />
+        </xsd:restriction>
+    </xsd:simpleType>
+
+
+    <xsd:simpleType name="IPv4Address">
+        <xsd:annotation>
+            <xsd:documentation>
+                IPv4 address in the dotted-decimal notation.
+            </xsd:documentation>
+        </xsd:annotation>
+
+        <xsd:restriction base="xsd:string">
+            <xsd:pattern value="((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\.){3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="GPIOList">
+        <xsd:restriction>
+            <xsd:simpleType>
+                <xsd:list itemType="xsd:unsignedShort" />
+            </xsd:simpleType>
+            <xsd:minLength value="1" />
+        </xsd:restriction>
+    </xsd:simpleType>
+
+</xsd:schema>

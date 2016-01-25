@@ -1,0 +1,35 @@
+group 'GarageDoorOpener'
+version '0.9'
+
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+sourceSets {
+    main.java.srcDir "src/GarageDoorOpener"
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile (group: 'com.pi4j', name: 'pi4j-core', version: '1.0') {
+        exclude module: 'pi4j-native'
+    }
+    compile group: 'org.mockito', name: 'mockito-core', version: '1.9.5'
+}
+
+jar {
+    manifest {
+        attributes "Main-Class": "GarageDoorOpener.Main"
+
+        def manifestCp =  "/opt/pi4j/lib/pi4j-core.jar"
+//            manifestCp += "/usr/share/java/mockito-core.jar"
+        attributes "Class-Path": manifestCp
+
+// Need full path for jar, which below does not provide
+//        attributes "Class-Path": configurations.compile.collect { it.getPath() }.join(' ') }
+    }
+}
