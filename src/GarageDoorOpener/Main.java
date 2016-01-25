@@ -76,8 +76,10 @@ public class Main {
         } catch(FileNotFoundException e) {
             System.err.println("Could not find keystore file!");
         } catch(KeyStoreException | NoSuchAlgorithmException | IOException | CertificateException |
-                KeyManagementException | UnrecoverableKeyException e) {
+                KeyManagementException e) {
             System.err.println(e.toString());
+        } catch(UnrecoverableKeyException e) {
+            System.err.println("Incorrect keypassword provided in config.xml");
         } finally {
             System.exit(1);
         }

@@ -3,6 +3,7 @@
 GarageControl.iml
 GarageDoorOpener.iml
 garage.jks
+garage.cer
 gradle/
 gradlew
 gradlew.bat
