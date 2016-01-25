@@ -141,12 +141,12 @@ public class Main {
                 clients.remove(c.getInetAddress()); client = null;
 
                 try {
-                    List<Short> gpios = code.getGPIOs();
-                    for (Short gpio : gpios) myGPIOs.get(gpio).high();
+                    for (Short gpio : code.getGPIOs()) myGPIOs.get(gpio).high();
                     Thread.sleep(500); // 0.5 second
-                    for (Short gpio : gpios) myGPIOs.get(gpio).low();
-                } catch(NullPointerException e) {
-                    System.err.println("GPIO not found! - " + e.toString());
+                } catch (InterruptedException e) {
+                    System.err.println(LocalDateTime.now() + " Interrupted...");
+                } finally {
+                    for (Short gpio : code.getGPIOs()) myGPIOs.get(gpio).low();
                 }
 
             } catch (NullPointerException e) {
@@ -161,9 +161,7 @@ public class Main {
                         client.attempts = 0;
                     }
                 }
-            } catch (InterruptedException e) {
-                System.err.println("Interrupted...");
-            } finally {
+            }  finally {
                 r.close();
                 c.close();
             }
@@ -196,13 +194,18 @@ public class Main {
             if(code.getEnabled()) {
                 enabled = true;
 
-                for(Short gpioNum : code.getGPIOs()) {
-                    if(!myGPIOs.containsKey(gpioNum)) {
-                        GpioPinDigitalOutput myPin = gpio.provisionDigitalOutputPin(
-                                RaspiPin.getPinByName("GPIO " + gpioNum.toString()),
-                                PinState.LOW);
-                        myPin.setShutdownOptions(true); // Unexport the pin on termination
-                        myGPIOs.put(gpioNum, myPin);
+                for (Short gpioNum : code.getGPIOs()) {
+                    if (!myGPIOs.containsKey(gpioNum)) {
+                        try {
+                            GpioPinDigitalOutput myPin = gpio.provisionDigitalOutputPin(
+                                    RaspiPin.getPinByName("GPIO " + gpioNum.toString()),
+                                    PinState.LOW);
+                            myPin.setShutdownOptions(true); // Unexport the pin on termination
+                            myGPIOs.put(gpioNum, myPin);
+                        } catch(NullPointerException e) {
+                            System.err.println("Invalid GPIO (" + gpioNum + ") specified in config.xml");
+                            System.exit(1);
+                        }
                     }
                 }
 
