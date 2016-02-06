@@ -9,17 +9,8 @@ then
   exit
 fi
 
-while true
-do
-  stty -echo
-  read -p "Enter password for secret key: " pass
-  stty echo
-  echo "" # newline
-  [ -z "$pass" ] || break # check not empty
-done
+keytool -genkeypair -keyalg RSA -alias garage -keystore garage.jks -storepass pointlesspassword
 
-keytool -genkeypair -keyalg RSA -alias garage -keystore garage.jks -storepass pointlesspassword -keypass "$pass"
-
-keytool -export -alias garage -keystore garage.jks -file garage.cer -storepass pointlesspassword -keypass "$pass"
+keytool -export -alias garage -keystore garage.jks -file garage.cer -storepass pointlesspassword
 
 echo "Now put garage.cer on a SD card and import into the Android app from the Settings screen."
