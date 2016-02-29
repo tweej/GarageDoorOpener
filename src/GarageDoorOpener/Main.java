@@ -202,6 +202,7 @@ public class Main {
                                     PinState.LOW);
                             myPin.setShutdownOptions(true); // Unexport the pin on termination
                             myGPIOs.put(gpioNum, myPin);
+                            System.out.println("Configured " + myPin.getPin().getName());
                         } catch(NullPointerException e) {
                             System.err.println("Invalid GPIO (" + gpioNum + ") specified in config.xml");
                             System.exit(1);
