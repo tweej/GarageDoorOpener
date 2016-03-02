@@ -137,6 +137,12 @@ public class Main {
                     return; // finally closes reader and socket
                 }
 
+                if(!code.getEnabled()) {
+                    System.out.println(LocalDateTime.now() + " Code " + clientCodeStr + " is valid but currently disabled!");
+                    clients.remove(c.getInetAddress());
+                    return; // finally closes reader and socket
+                }
+
                 System.out.println(now + " Accepted code " + clientCodeStr);
                 clients.remove(c.getInetAddress()); client = null;
 
