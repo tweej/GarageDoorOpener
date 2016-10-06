@@ -14,6 +14,17 @@
     configuration file enables unattended startup. -->
     <keypassword>secretpassword</keypassword>
 
+    <!-- Using the following email addresses to send an email when a code is entered. Currently, only Gmail recipients
+    are supported per https://support.google.com/a/answer/176600?hl=en. This section is optional. The feature can be
+    disabled by removing this section from this file.-->
+    <email>
+        <sender>aaa@gmail.com</sender>
+        <recipients>
+            <recipient>bbb@gmail.com</recipient>
+            <recipient>ccc@gmail.com</recipient>
+        </recipients>
+    </email>
+
     <!-- This section contains variables to tune the server's ability to temporarily block clients which repeatedly
     submit incorrect codes. This section is optional. The feature can be disabled by removing this section from this
     file. -->
