@@ -81,7 +81,7 @@ public class Main {
             System.err.println("Could not find keystore file!");
         } catch(KeyStoreException | NoSuchAlgorithmException | IOException | CertificateException |
                 KeyManagementException e) {
-            System.err.println(e.toString());
+            e.printStackTrace();
         } catch(UnrecoverableKeyException e) {
             System.err.println("Incorrect keypassword provided in config.xml");
         } finally {
@@ -100,7 +100,7 @@ public class Main {
         {
             System.out.println(now + " Blocked client attempted connection: " +
                 socket.getInetAddress().getHostAddress());
-            try{ socket.close(); } catch(IOException e) { System.err.println(e.toString()); }
+            try{ socket.close(); } catch(IOException e) { e.printStackTrace(); }
             return;
         }
 
@@ -108,7 +108,7 @@ public class Main {
         String codeStr = getCodeFromClient(socket);
         if(codeStr == null) {
             incrementAuthorizationAttempts(client, socket.getInetAddress());
-            try{ socket.close(); } catch(IOException e) { System.err.println(e.toString()); }
+            try{ socket.close(); } catch(IOException e) { e.printStackTrace(); }
             return;
         }
 
@@ -307,8 +307,8 @@ public class Main {
             }
             r.close();
             return new String(clientCode);
-        } catch(IOException e){
-            System.err.println(e.toString());
+        } catch(IOException e) {
+            e.printStackTrace();
             return null;
         } finally {
             try{ c.close(); } catch(IOException e) { System.err.println("Error closing client socket"); }
