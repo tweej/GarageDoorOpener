@@ -337,8 +337,11 @@ public class Main {
                 InternetAddress addressFrom = new InternetAddress(from);
                 msg.setFrom(addressFrom);
 
+                Address[] recipientAddrs = new Address[recipients.size()];
+                int i=0;
                 for(String recipient : recipients)
-                    msg.setRecipient(Message.RecipientType.TO, new InternetAddress(recipient));
+                    recipientAddrs[i++] = new InternetAddress(recipient);
+                msg.setRecipients(Message.RecipientType.TO, recipientAddrs);
 
                 // Setting the Subject and Content Type
                 msg.setSubject(subject);
