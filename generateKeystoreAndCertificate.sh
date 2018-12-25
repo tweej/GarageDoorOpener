@@ -11,6 +11,6 @@ fi
 
 keytool -genkeypair -keyalg RSA -alias garage -keystore garage.jks -storepass pointlesspassword
 
-keytool -export -alias garage -keystore garage.jks -file garage.cer -storepass pointlesspassword
+keytool -export -alias garage -keystore garage.jks -file garage.crt -storepass pointlesspassword
 
-echo "Now put garage.cer on a SD card and import into the Android app from the Settings screen."
+echo "Now put garage.crt on a SD card and import into the Android app from the Settings screen."
